@@ -1,0 +1,15 @@
+{
+  "name": "dashboard",
+  "author": "me",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "Dashboard client",
+  "main": "client.js",
+  "scripts": {
+    "start": "node src/client.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    
+  }
+}

@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+
+  server:
+    build: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRESS_USERNAME: username
+      POSTGRES_PASSWORD: password
