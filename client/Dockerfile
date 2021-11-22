@@ -5,6 +5,7 @@ WORKDIR /usr/app/client
 COPY package.json /usr/app/client
 COPY package-lock.json /usr/app/client
 
+RUN npm install
 RUN npm ci
 
 COPY . .

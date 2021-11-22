@@ -7,7 +7,6 @@ services:
       - server
     ports:
       - "3000:3000"
-      - "9229:9229"
 
   server:
     build: ./server
