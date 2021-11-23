@@ -1,6 +1,3 @@
-
-'use strict';
-
 const express = require("express");
 
 // Constant
@@ -13,4 +10,4 @@ const app = express();
 app.use('/', serverRouter);
 
 app.listen(PORT, HOST);
-console.log("Running on http://"+PORT+':'+PORT);
+console.log("Running on http://"+HOST+':'+PORT);
