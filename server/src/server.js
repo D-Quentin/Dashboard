@@ -1,12 +1,13 @@
 
 'use strict';
 
-const express = require("express");
 
 // Constant
 const PORT = 8080
 const HOST = "0.0.0.0";
+const express = require("express");
 const serverRouter = require("./routes/routes.js");
+const databaseConnector = require("./models/index.js")
 
 // App
 const app = express();

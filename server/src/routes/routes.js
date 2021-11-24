@@ -1,8 +1,9 @@
 "use strict";
 
 // Constant
+const errorRoutes = require("./error");
+const sequelize = require("sequelize");
 const router = require("express").Router();
-const errorRoutes = require("./error")
 
 // router.use("/", );
 
