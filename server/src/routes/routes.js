@@ -1,6 +1,7 @@
 // Constant
+const errorRoutes = require("./error");
+const sequelize = require("sequelize");
 const router = require("express").Router();
-const errorRoutes = require("./error")
 
 router.use(function (_, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*')
