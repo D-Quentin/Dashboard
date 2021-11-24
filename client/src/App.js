@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 
+const SERVER = "http://localhost:8080"
+
 function App() {
 
   async function handleClick() {
-    const data = await fetch("http://localhost:8080/api/test")
+    const data = await fetch(SERVER + "/api/test")
     const json = data.json()
     console.log(json);
   }
