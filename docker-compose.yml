@@ -6,21 +6,33 @@ services:
     depends_on:
       - server
     ports:
-      - "3000:3000"
+      - 3000:3000
 
   server:
     build: ./server
     ports:
-      - "8080:8080"
+      - 8080:8080
     depends_on:
       - db
     environment:
+      # Server
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: 8080:8080
+      # DB
       POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
-      POSTGRES_USERNAME: postgres
-      POSTGRES_PASSWORD: null
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # OAuth2
+      GOOGLE_OAUTH_SECRET: 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
+      GOOGLE_OAUTH_API_KEY: 656903528628-sn7o1btc0ac4jo87jt5nvm7vrhs73rp4.apps.googleusercontent.com
 
   db:
     image: postgres:11.2-alpine
+    container_name: postgres
+    restart: always
     ports:
-      - "5432:5432"
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=user
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
