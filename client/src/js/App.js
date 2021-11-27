@@ -1,12 +1,15 @@
 import '../css/App.css';
 import TopBar from './TopBar';
+import Widgets from './Widgets';
 
 const SERVER = "http://localhost:8080";
 
-function App() {
+async function App() {
+  const widgets = await Widgets();
   return (
     <div className="App">
       <TopBar />
+      {widgets}
     </div>
   );
 }
