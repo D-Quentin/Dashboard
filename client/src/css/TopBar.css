@@ -1,0 +1,29 @@
+.TopBar {
+    top: 0;
+    z-index: 1500;
+    width: 100%;
+    height: 62px;
+    background: rgba(0, 0, 0, 0.6);
+    font-family: proxima nova;
+    position: fixed;
+}
+
+.TopLogo {
+    width: 100%;
+    position: absolute;
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.IconLogo {
+    margin-right: 50%;
+}
+
+.TextLogo {
+    margin-left: -170px;
+}
+
+.MainLogo {
+    height: 50px;
+}
