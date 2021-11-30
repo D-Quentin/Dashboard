@@ -8,6 +8,18 @@ services:
     ports:
       - 3000:3000
 
+  db:
+    restart: always
+    image: postgres:11.2-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
   server:
     build: ./server
     ports:
@@ -25,14 +37,3 @@ services:
       # OAuth2
       GOOGLE_OAUTH_SECRET: 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
       GOOGLE_OAUTH_API_KEY: 656903528628-sn7o1btc0ac4jo87jt5nvm7vrhs73rp4.apps.googleusercontent.com
-
-  db:
-    image: postgres:11.2-alpine
-    container_name: postgres
-    restart: always
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_DB=user
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
