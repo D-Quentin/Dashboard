@@ -1,8 +1,7 @@
 // Constant
 const {Sequelize, DataTypes} = require("sequelize");
-const {POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST} = process.env
-const sequelize = new Sequelize('postgresql://'+POSTGRES_USER+':'+POSTGRES_PASSWORD+'@'+POSTGRES_HOST+'/user');
-const queryInterface = sequelize.getQueryInterface();
+const {POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DB} = process.env
+const sequelize = new Sequelize('postgres://'+POSTGRES_USER+':'+POSTGRES_PASSWORD+'@'+POSTGRES_HOST+'/'+POSTGRES_DB);
 
 sequelize.authenticate().then(() => {
   console.log("Connection to user database has been established sucessfully.");
@@ -50,10 +49,12 @@ Widget.belongsTo(User);
 
 async function addUser(username, password) {
   const finder = await User.findOne({where: {username: username}});
-  if (finder === null) {
-    const user = User.build(username, password);
-    await user.save();
-  }
+  if (finder === null)
+    await (User.build(username, password)).save();
   else
     console.log();
+}
+
+async function addWidget(id_user, order, widget) {
+  await (Widget.build(id_user, order, widget)).save();
 }

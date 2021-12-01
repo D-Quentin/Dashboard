@@ -1,8 +1,9 @@
 // Constant
 const {SERVER_HOST, SERVER_PORT} = process.env;
+
 const express = require("express");
 const serverRouter = require("./routes/routes.js");
-require("./models/index.js")
+// require("./models/index.js")
 
 // App
 const app = express();

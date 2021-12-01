@@ -1,6 +1,8 @@
 // Constant
+const {WEATHER_API_KEY} = process.env
+
+const http = require("http");
 const errorRoutes = require("./error");
-const passport = require("passport");
 const router = require("express").Router();
 
 // Header
@@ -12,9 +14,37 @@ router.use(function (_, res, next) {
 
 // Home
 router.get('/', (_, res) => {
-  res.send('./../js/App');
+  res.send('Hello world');
 });
 //
+
+// Weather API
+router.get('/weather/:city/:days', (req, res) => {
+  const options = {
+    host: "http://api.weatherapi.com/v1",
+    path:"/current.json",
+    headers: {
+      key: WEATHER_API_KEY,
+      q: req.params.city,
+      days: req.params.days
+    },
+    method: "GET"
+  }
+  http.request(options, callback).end();
+});
+//
+
+callback = function(response) {
+  var str= "";
+
+  response.on("data", function(chunck) {
+    str += chunck;
+  });
+
+  response.on("end", function () {
+    console.log(str);
+  })
+}
 
 // Authentification
 // const isLoggedIn = (req, res, next) => {
