@@ -1,3 +1,9 @@
 .App {
   text-align: center;
 }
+
+html {
+  background-color: #2B303A;
+  background-image: linear-gradient(to bottom right, #04151F, #34202a, #153248);
+  height: 100%;
+}

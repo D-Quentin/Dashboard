@@ -1,24 +1,16 @@
 // Constant
 const {Sequelize, DataTypes} = require("sequelize");
-const queryInterface = sequelize.getQueryInterface();
 const {POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST} = process.env
+const sequelize = new Sequelize('postgresql://'+POSTGRES_USER+':'+POSTGRES_PASSWORD+'@'+POSTGRES_HOST+'/user');
+const queryInterface = sequelize.getQueryInterface();
 
-const sq_user = new Sequelize('postgresql://'+POSTGRES_USER+':'+POSTGRES_PASSWORD+'@'+POSTGRES_HOST+'/user');
-const sq_widgets = new Sequelize('postgresql://'+POSTGRES_USER+':'+POSTGRES_PASSWORD+'@'+POSTGRES_HOST+'/widgets')
-
-sq_user.authenticate().then(() => {
+sequelize.authenticate().then(() => {
   console.log("Connection to user database has been established sucessfully.");
 }).catch(err => {
   console.log("Error: ", err);
 });
 
-sq_widgets.authenticate().then(() => {
-  console.log("Connection to user database has been established sucessfully.");
-}).catch(err => {
-  console.log("Error: ", err);
-})
-
-const User = sq_user.define("user", {
+const User = sequelize.define("user", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -35,7 +27,7 @@ const User = sq_user.define("user", {
 });
 User.sync();
 
-const Widget = sq_widgets.define("widgets", {
+const Widget = sequelize.define("widgets", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -44,19 +36,24 @@ const Widget = sq_widgets.define("widgets", {
   id_user: {
     type: DataTypes.INTEGER
   },
-  list: {
+  order: {
+    type: DataTypes.INTEGER
+  },
+  widget: {
     type: DataTypes.JSON,
     allowNull: true,
   }
 })
 Widget.sync();
+User.hasMany(Widget);
+Widget.belongsTo(User);
 
-User.addUser = function (username, password) {
+async function addUser(username, password) {
   const finder = await User.findOne({where: {username: username}});
-  if (finder === null)
-    queryInterface.addColumn("user", username, password);
+  if (finder === null) {
+    const user = User.build(username, password);
+    await user.save();
+  }
   else
-    console.log("User " + username + " already exist");
+    console.log();
 }
-
-module.exports = sq_user;

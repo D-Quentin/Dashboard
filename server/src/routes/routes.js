@@ -12,44 +12,44 @@ router.use(function (_, res, next) {
 
 // Home
 router.get('/', (_, res) => {
-  res.status(200).send("Hello World");
+  res.send('./../js/App');
 });
 //
 
 // Authentification
-const isLoggedIn = (req, res, next) => {
-  if (req.user) {
-      next();
-  } else {
-      res.sendStatus(401);
-  }
-}
+// const isLoggedIn = (req, res, next) => {
+//   if (req.user) {
+//       next();
+//   } else {
+//       res.sendStatus(401);
+//   }
+// }
 
-router.get('/google', 
-  passport.authenticate(
-    'google', {scope: ["email", "profile"]}
-  )
-);
+// router.get('/google', 
+//   passport.authenticate(
+//     'google', {scope: ["email", "profile"]}
+//   )
+// );
 
-router.get('/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/',
-  }),
-  function(req, res) {
-    res.redirect('/success');
-  }
-);
+// router.get('/google/callback',
+//   passport.authenticate('google', {
+//     failureRedirect: '/',
+//   }),
+//   function(req, res) {
+//     res.redirect('/success');
+//   }
+// );
 
-router.get('/success', isLoggedIn, (req, res) => {
-  res.send("Welcome "+req.user.email);
-});
+// router.get('/success', isLoggedIn, (req, res) => {
+//   res.send("Welcome "+req.user.email);
+// });
 
-router.get('/logout', (req, res) => {
-  req.session = null;
-  req.logout();
-  res.redirect('/');
-});
-//
+// router.get('/logout', (req, res) => {
+//   req.session = null;
+//   req.logout();
+//   res.redirect('/');
+// });
+// //
 
 
 // API
