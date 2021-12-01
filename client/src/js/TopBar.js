@@ -10,12 +10,14 @@ function TopBar() {
         <a href="/" className="TextLogo">
           <img src="/textDashboard.png" className="MainLogo"/>
         </a>
-        <a href="/login" >
-          <button type="button" className="LoginButton">Login</button>
-        </a>
-        <a href="/register" >
-        <button type="button" className="RegisterButton">Register</button>
-        </a>
+        <div className="LoginRegisterComponent">
+          <a href="/login" >
+            <button type="button" className="LoginButton">Login</button>
+          </a>
+          <a href="/register" >
+          <button type="button" className="RegisterButton">Register</button>
+          </a>
+        </div>
       </div>
     </header>
   );
