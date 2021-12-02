@@ -1,16 +1,10 @@
 // Constant
 const {WEATHER_API_KEY} = process.env
-
-const http = require("http");
+const {v4: uuidv4} = require('uuid');
 const errorRoutes = require("./error");
 const router = require("express").Router();
-
-// Header
-router.use(function (_, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  next()
-})
-//
+const orm = require("../database/models.js");
+const api = require("../api/api_request.js");
 
 // Home
 router.get('/', (_, res) => {
@@ -18,81 +12,73 @@ router.get('/', (_, res) => {
 });
 //
 
-// Weather API
-router.get('/weather/:city/:days', (req, res) => {
-  const options = {
-    host: "http://api.weatherapi.com/v1",
-    path:"/current.json",
-    headers: {
-      key: WEATHER_API_KEY,
-      q: req.params.city,
-      days: req.params.days
-    },
-    method: "GET"
+// Login & register
+router.get('/register', async function(req, res) {
+  const user_exist = await orm.isUsernameTaken(req.query.username);
+  if (!user_exist) {
+    const uuid = uuidv4();
+    orm.addUser(req.query.username, req.query.password, uuid)
+    res.send(JSON.parse('{"success": true, "uuid": "'+uuid+'"}'));
+    return;
   }
-  http.request(options, callback).end();
+  res.send(JSON.parse('{"success": false, "msg": "Username taken"}'));
+  return;
+});
+
+router.get('/login', async function(req, res) {
+  const uuid = await orm.getUuidFromUsername(req.query.username, req.query.password);
+  if (uuid === null) {
+    res.send(JSON.parse('{"success": false, "msg": "Username or password invalid"}'));
+    return;
+  }
+  res.send(JSON.parse('{"success": true, "uuid": "'+uuid+'"}'));
+  return;
 });
 //
 
-callback = function(response) {
-  var str= "";
-
-  response.on("data", function(chunck) {
-    str += chunck;
-  });
-
-  response.on("end", function () {
-    console.log(str);
-  })
-}
-
-// Authentification
-// const isLoggedIn = (req, res, next) => {
-//   if (req.user) {
-//       next();
-//   } else {
-//       res.sendStatus(401);
-//   }
-// }
-
-// router.get('/google', 
-//   passport.authenticate(
-//     'google', {scope: ["email", "profile"]}
-//   )
-// );
-
-// router.get('/google/callback',
-//   passport.authenticate('google', {
-//     failureRedirect: '/',
-//   }),
-//   function(req, res) {
-//     res.redirect('/success');
-//   }
-// );
-
-// router.get('/success', isLoggedIn, (req, res) => {
-//   res.send("Welcome "+req.user.email);
-// });
-
-// router.get('/logout', (req, res) => {
-//   req.session = null;
-//   req.logout();
-//   res.redirect('/');
-// });
-// //
-
-
-// API
-router.get('/test', function(_, res) {
-  res.status(200).send("test")
-});
-
-router.get('/api/test', function(_, res) {
-  res.send({
-    msg: "Hello"
-  })
-});
+// Widget management
+router.get("/add/widget", async function(req, res) {
+  const id = await orm.getUserFromUuid(req.query.uuid);
+  if (uuid === null) {
+    res.send(JSON.parse('{"success": false, "msg": "uuid is invalid'))
+    return;
+  }
+  orm.addWidget(id, req.query.type, req.query.order, req.query.widget);
+  res.send(JSON.parse('{"success": true'));
+  return;
+})
 //
+
+router.get("get/widgets", async function(req, res) {
+  const id = await orm.getUserFromUuid(req.query.uuid);
+  if (uuid === null) {
+    res.send(JSON.parse('{"success": false, "msg": "uuid is invalid'))
+    return;
+  }
+  orm.getAllWidgetsFromUser(id);
+  res.send(JSON.parse('{"success": true'));
+})
+
+// Weather Widget
+router.get('/weather/:city', async function(req, res) {
+  const response = await api.axios_request(
+    "https://api.weatherapi.com/v1/current.json?key="+WEATHER_API_KEY+"&q="+req.params.city,
+    "get",
+    {"Content-Type": "application/json"},
+    8000
+  )
+  res.send(response);
+});
+
+router.get('/weather/:city/:days', async function(req, res) {
+  const response = await api.axios_request(
+    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.params.city+"&days="+req.params.days,
+    "get",
+    {"Content-Type": "application/json"},
+    8000
+  );
+  res.send(response);
+});
 
 errorRoutes(router);
 

@@ -3,13 +3,13 @@ const {SERVER_HOST, SERVER_PORT} = process.env;
 
 const express = require("express");
 const serverRouter = require("./routes/routes.js");
-// require("./models/index.js")
+require("./database/models.js")
 
 // App
-const app = express();
+const server = express();
 
 // Routing
-app.use('/', serverRouter);
+server.use('/', serverRouter);
 
-app.listen(SERVER_PORT, SERVER_HOST);
+server.listen(SERVER_PORT, SERVER_HOST);
 console.log("Running on http://"+SERVER_HOST+':'+SERVER_PORT);
