@@ -1,10 +1,33 @@
 // Constant
+const md5 = require('md5');
 const {WEATHER_API_KEY} = process.env
 const {v4: uuidv4} = require('uuid');
 const errorRoutes = require("./error");
 const router = require("express").Router();
 const orm = require("../database/models.js");
 const api = require("../api/api_request.js");
+const {OAuth2Client} = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_OAUTH_API_KEY)
+const express = require("express");
+const cors = require("cors");
+
+router.use(express.static('public'));
+router.use(express.json());
+
+const corsOpts = {
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+
+router.use(cors(corsOpts));
 
 // Home
 router.get('/', (_, res) => {
@@ -21,17 +44,61 @@ router.get('/register', async function(req, res) {
     res.send(JSON.parse('{"success": true, "uuid": "'+uuid+'"}'));
     return;
   }
-  res.send(JSON.parse('{"success": false, "msg": "Username taken"}'));
+  res.send(JSON.parse('{"success": false, "msg": "User already exist"}'));
   return;
 });
 
 router.get('/login', async function(req, res) {
-  const uuid = await orm.getUuidFromUsername(req.query.username, req.query.password);
+  const uuid = await orm.getUuidFromUsernameAndPassword(req.query.username, req.query.password);
   if (uuid === null) {
     res.send(JSON.parse('{"success": false, "msg": "Username or password invalid"}'));
     return;
   }
   res.send(JSON.parse('{"success": true, "uuid": "'+uuid+'"}'));
+  return;
+});
+//
+
+// Google login & register
+router.post("/oauth/login", async function (req, res) {
+  const ticket = await client.verifyIdToken({
+    idToken: req.body.token,
+    audience: process.env.GOOGLE_OAUTH_API_KEY
+  });
+  if (ticket === null) {
+    res.send(JSON.parse('{"success": false, "msg": "Invalid token"}'));
+    return;
+  }
+  const {name, email} = ticket.getPayload();
+  const uuid = await orm.getUuidFromUsername(email);
+
+  if (uuid === null) {
+    res.send(JSON.parse('{"success": false, "msg": "Username or password invalid"}'));
+    return;
+  }
+  res.send(JSON.parse('{"success": true, "username": "'+name+'", "uuid": "'+uuid+'"}'));
+  return;
+});
+
+router.post("/oauth/register", async function (req, res) {
+  const ticket = await client.verifyIdToken({
+    idToken: req.body.token,
+    audience: process.env.GOOGLE_OAUTH_API_KEY
+  });
+  if (ticket === null) {
+    res.send(JSON.parse('{"success": false, "msg": "Invalid token"}'));
+    return;
+  }
+  const {name, email} = ticket.getPayload();
+  const user_exist = await orm.isUsernameTaken(email);
+
+  if (!user_exist) {
+    const uuid = uuidv4()
+    orm.addUser(email, md5(req.body.token), uuid)
+    res.send(JSON.parse('{"success": true, "username": "'+name+'", "uuid": "'+uuid+'"}'));
+    return;
+  }
+  res.send(JSON.parse('{"success": false, "msg": "User already exist"}'));
   return;
 });
 //

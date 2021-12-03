@@ -69,8 +69,15 @@ module.exports =
     await (User.build({username: username, password: password, uuid: uuid})).save();
   },
 
-  getUuidFromUsername: async function (username, password) {
+  getUuidFromUsernameAndPassword: async function (username, password) {
     const user = await User.findOne({where: {username: username, password: password}});
+    if (user === null)
+      return null
+    return user.uuid;
+  },
+
+  getUuidFromUsername: async function (username) {
+    const user = await User.findOne({where: {username: username}});
     if (user === null)
       return null
     return user.uuid;

@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './css/index.css';
 import App from './js/App';
 import TopBar from './js/TopBar';
+import Login from './js/Login';
+import Register from './js/Register';
 import { BrowserRouter as Router, Routes ,Route } from "react-router-dom";
 
 async function Routing() {
@@ -10,8 +12,9 @@ async function Routing() {
     <Router>
       <TopBar />
       <Routes>
-      <Route path="/" element={await App()} />
-        {/* <Route path="/about" component={About} /> */}
+        <Route path="/" element={await App()} />
+        <Route path="/login" element={await Login()} />
+        <Route path="/register" element={await Register()} />
       </Routes>
     </Router>
   );
