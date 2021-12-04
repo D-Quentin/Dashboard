@@ -1,0 +1,64 @@
+.EditParamInput {
+    width: 180px;
+    padding: 12px;
+    background: rgb(50 50 50);
+    border: 1px solid rgb(82 82 82);
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    line-height: 19px;
+    margin-top: -13px;
+}
+
+.SaveEditButton {
+    width: 80px;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 19px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: #0fb800;
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 40%);
+}
+
+.DeleteEditButton {
+    width: 80px;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 19px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: #cf0000;
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 40%);
+}
+
+.NewWidget {
+    background-color: rgb(0 0 0 / 15%);
+    border: 1px solid rgb(82 82 82);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.NewWidgetText {
+    font-size: 20px;
+}
+
+.NewWidgetPlus {
+    font-size: 30px;
+    font-weight: 700;
+    width: 20%;
+    margin-top: 65px;
+    background: #DB324D;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
+}

@@ -5,6 +5,8 @@ import App from './js/App';
 import TopBar from './js/TopBar';
 import Login from './js/Login';
 import Register from './js/Register';
+import EditWidgets from './js/Edit';
+import NewWidget from './js/NewWidget';
 import { BrowserRouter as Router, Routes ,Route } from "react-router-dom";
 
 async function Routing() {
@@ -15,7 +17,10 @@ async function Routing() {
         <Route path="/" element={await App()} />
         <Route path="/login" element={await Login()} />
         <Route path="/register" element={await Register()} />
+        <Route path="/edit" element={await EditWidgets()} />
+        <Route path="/newWidget" element={await NewWidget()} />
       </Routes>
+      <div id="End"></div>
     </Router>
   );
 }

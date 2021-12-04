@@ -10,6 +10,7 @@ function Disconnect() {
 
 function TopBar() {
   var buttonData;
+  var settings;
   if (GestCookie.readCookie("uuid") != null) {
     buttonData = 
     <div className="LoginRegisterComponent">
@@ -17,7 +18,14 @@ function TopBar() {
         {GestCookie.readCookie("username")}
       </div>
       <button type="button" className="DisconnectButton" onClick={Disconnect}>Disconnect</button>
-    </div>
+    </div>;
+    settings =
+    <a href="/edit" className="WarpEditButton">
+      <button type="button" className="EditButton">
+        <img src="/iconSettings.png" className="SettingsIcon"/>
+        Edit widgets
+      </button>
+    </a>;
   } else {
     buttonData = 
     <div className="LoginRegisterComponent">
@@ -27,7 +35,8 @@ function TopBar() {
       <a href="/register" >
         <button type="button" className="RegisterButton">Register</button>
       </a>
-    </div>
+    </div>;
+    settings = <div className="WarpEditButton"><div className="EmptyEditButton"></div></div>;
   }
   return (
     <header className="TopBar">
@@ -35,6 +44,7 @@ function TopBar() {
         <a href="/" className="IconLogo">
           <img src="/iconDashboard.png" className="MainLogo"/>
         </a>
+        {settings}
         <a href="/" className="TextLogo">
           <img src="/textDashboard.png" className="MainLogo"/>
         </a>
