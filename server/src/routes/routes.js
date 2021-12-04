@@ -31,7 +31,7 @@ router.use(cors(corsOpts));
 
 // Home
 router.get('/', (_, res) => {
-  res.send('Hello world');
+  res.status(200).send('Hello world');
 });
 //
 
@@ -104,27 +104,22 @@ router.post("/oauth/register", async function (req, res) {
 //
 
 // Widget management
-router.get("/add/widget", async function(req, res) {
-  const id = await orm.getUserFromUuid(req.query.uuid);
-  if (uuid === null) {
-    res.send(JSON.parse('{"success": false, "msg": "uuid is invalid'))
-    return;
-  }
-  orm.addWidget(id, req.query.type, req.query.order, req.query.widget);
-  res.send(JSON.parse('{"success": true'));
+router.post("/set/widgets", async function(req, res) {
+  const response = await orm.setWidgets(req.query.uuid, req.body.widgets);
+  res.send(JSON.parse('{"success": true}'));
   return;
-})
-//
+});
 
-router.get("get/widgets", async function(req, res) {
-  const id = await orm.getUserFromUuid(req.query.uuid);
-  if (uuid === null) {
-    res.send(JSON.parse('{"success": false, "msg": "uuid is invalid'))
+router.get("/get/widgets", async function(req, res) {
+  json = await orm.getAllWidgetsFromUser(req.query.uuid);
+  if (json === null) {
+    res.send("");
     return;
   }
-  orm.getAllWidgetsFromUser(id);
-  res.send(JSON.parse('{"success": true'));
-})
+  res.send(JSON.parse(json));
+  return;
+});
+//
 
 // Weather Widget
 router.get('/weather/:city', async function(req, res) {

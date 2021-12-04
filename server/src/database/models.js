@@ -15,6 +15,10 @@ const User = sequelize.define("user", {
     autoIncrement: true,
     primaryKey: true
   },
+  uuid: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,38 +27,11 @@ const User = sequelize.define("user", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  uuid: {
+  widgets: {
     type: DataTypes.STRING,
-    allowNull: false
   }
 });
 User.sync();
-
-const Widget = sequelize.define("widgets", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  order: {
-    type: DataTypes.INTEGER
-  },
-  config: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  }
-})
-Widget.sync();
-
-User.hasMany(Widget, {as: "widget"});
-Widget.belongsTo(User, {
-  foreignKey: "userId", 
-  as: "user",
-});
 
 module.exports =
 {
@@ -66,7 +43,7 @@ module.exports =
   },
 
   addUser: async function (username, password, uuid) {
-    await (User.build({username: username, password: password, uuid: uuid})).save();
+    await (User.build({username: username, password: password, uuid: uuid, widgets: "{data: []}"})).save();
   },
 
   getUuidFromUsernameAndPassword: async function (username, password) {
@@ -79,22 +56,28 @@ module.exports =
   getUuidFromUsername: async function (username) {
     const user = await User.findOne({where: {username: username}});
     if (user === null)
-      return null
+      return null;
     return user.uuid;
   },
 
-  addWidget: async function (id_user, type, order, config) {
-    await Widget.build({userId: id_user, type: type, order: order, config: config}).save();
+  setWidgets: async function (uuid, widgets) {
+    User.update(
+      {widgets: widgets},
+      {where: {uuid: uuid}}
+    ).then(console.log("success"))
+    .catch((err) => {console.log(err)});
   },
 
   getAllWidgetsFromUser : async function (id_user) {
-    const answer = await Widget.findAll({where: {user: id_user}})
-    console.log(answer);
+    const user = await User.findOne({where: {uuid: id_user}});
+    if (user === null)
+      return null;
+    return user.widgets;
   },
 
   getUserFromUuid: async function(uuid) {
     const user = await User.findOne({where: {uuid: uuid}});
-    if (user == null)
+    if (user === null)
       return null;
     return user.id;
   }

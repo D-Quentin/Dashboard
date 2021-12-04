@@ -16,7 +16,7 @@ async function CreateWidget() {
   tmp = document.getElementById('SelectSizeId');
   const size = tmp.options[tmp.selectedIndex].value + "Widget";
   const param = document.getElementById("ParameterId").value;
-  const allWidget = await (await fetch(SERVER + "/getallwidget?uuid=" + GestCookie.readCookie("uuid"))).json();
+  const allWidget = await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json();
 
   allWidget.push({order: allWidget[allWidget.length - 1].order, type, size, param});
 
@@ -27,12 +27,16 @@ async function CreateWidget() {
     },
     body: JSON.stringify(allWidget)
   };
-  await fetch(SERVER + "/setallwidget", option);
+  await fetch(SERVER + "/set/widgets?uuid=" + GestCookie.readCookie("uuid"), option);
   document.location.href = "/edit#End";
   return;
 }
 
 async function NewWidget() {
+  if (GestCookie.readCookie("uuid") == null) {
+    return;
+  }
+  return;
   var allOptions;
   const allWidgets = await getListWidget();
 

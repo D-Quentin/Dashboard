@@ -2,6 +2,9 @@ import '../css/Widgets.css';
 import '../css/Edit.css';
 import Weather from './widgets/Weather';
 
+const GestCookie = require('./Cookie.js');
+const SERVER = "http://127.0.0.1:8080";
+
 async function SaveWidget(id) {
 
 }
@@ -10,7 +13,7 @@ async function DeleteWidget(id) {
   
 }
 
-async function Widget(widget) {
+async function EditWidget(widget) {
   let dataWidget;
   if (widget.type == "WeatherWidget")
   dataWidget = await Weather(widget.size);
@@ -30,21 +33,25 @@ async function Widget(widget) {
   )
 }
 
-async function getAllWidget() {
-  // const allWidget = await (await fetch(SERVER + "/getallwidget?uuid=" + GestCookie.readCookie("uuid"))).json();
-  const data = [
-    {order: "1", type: "WeatherWidget", size: "Small", param: "Paris"},
-    {order: "2", type: "EmptyWidget", size: "Medium", param: ""},
-    {order: "3", type: "EmptyWidget", size: "Medium", param: ""},
-    {order: "4", type: "WeatherWidget", size: "Medium", param: "Marseille"},
-    {order: "5", type: "EmptyWidget", size: "Small", param: ""}
-  ];
+// async function getAllWidget() {
+//   // const allWidget = await (await fetch(SERVER + "/getallwidget?uuid=" + GestCookie.readCookie("uuid"))).json();
+//   const data = [
+//     {order: "1", type: "WeatherWidget", size: "Small", param: "Paris"},
+//     {order: "2", type: "EmptyWidget", size: "Medium", param: ""},
+//     {order: "3", type: "EmptyWidget", size: "Medium", param: ""},
+//     {order: "4", type: "WeatherWidget", size: "Medium", param: "Marseille"},
+//     {order: "5", type: "EmptyWidget", size: "Small", param: ""}
+//   ];
 
-  return (data);
-}
+//   return (data);
+// }
 
 async function EditWidgets() {
-  const widgetType = await getAllWidget();
+  if (GestCookie.readCookie("uuid") == null) {
+    return;
+  }
+  return;
+  const widgetType = await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json();
   let widgetContent;
   for (let i = 0; i != widgetType.length; i++) {
     widgetContent = <>{widgetContent}{await Widget(widgetType[i])}</>;
