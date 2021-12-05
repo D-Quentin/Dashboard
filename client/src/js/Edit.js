@@ -27,7 +27,7 @@ async function SaveWidget(id) {
 }
 
 async function DeleteWidget(id) {
-  allData = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
+  var allData = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
 
   var pos = 0;
   for (var i = 0; allData[i] != undefined; i += 1) {
