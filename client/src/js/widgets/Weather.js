@@ -1,5 +1,7 @@
 import '../../css/widgets/Weather.css';
 
+const SERVER = "http://127.0.0.1:8080";
+
 async function getWeatherData() {
   // const data = await fetch(SERVER + "/api/widgetsdata/weather"); TO DO
   const data = {city: "Paris", tempNow: "12", prevision:
@@ -15,8 +17,7 @@ async function getWeatherData() {
   return (data);
 }
 
-async function WeatherMedium() {
-  const data = await getWeatherData();
+function WeatherMedium(data) {
   let weatherList1;
   let weatherList2;
 
@@ -52,22 +53,22 @@ async function WeatherMedium() {
   );
 }
 
-async function WeatherSmall() {
-  const data = await getWeatherData();
-
+function WeatherSmall(data) {
   return (
     <div className="WeatherSmall">
       <div className="TempNowSmall">{data.tempNow + "°"}</div>
       <div className="WeatherCitySmall">{data.city}</div>
     </div>
-  )
+  );
 }
 
-async function Weather(widgetSize) {
+async function Weather(widgetSize, param) {
+  const data = await getWeatherData();
+
   if (widgetSize == "SmallWidget")
-    return (await WeatherSmall());
+    return (WeatherSmall(data));
   else
-    return (await WeatherMedium());
+    return (WeatherMedium(data));
 }
 
 export default Weather;

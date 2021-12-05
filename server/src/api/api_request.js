@@ -10,7 +10,7 @@ module.exports =
       timeout: timeout,
     })
     .then(res => res.data)
-    .catch(err => console.log("Error WeatherApi: ", err));
+    // .catch(err => console.log("Error WeatherApi: ", err));
   },
 
   getCurrentTemp: function (city) {

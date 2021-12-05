@@ -1,0 +1,48 @@
+
+
+.CryptoSmall {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.PriceNowSmall {
+    font-size: 40px;
+    margin-top: 25px;
+}
+
+.CurrencySmall {
+    font-size: 30px;
+}
+
+.LogoCryptoSmall {
+    height: 70px;
+    margin: 15px;
+}
+
+.GraphCryptoMedium {
+    height: 100px;
+}
+
+.LogoCryptoMedium {
+    height: 100px;
+}
+
+.LogoGraphMedium {
+    display: flex;
+    margin-top: 25px;
+    justify-content: space-evenly;
+}
+
+.PriceCurrencyMedium {
+    display: flex;
+    margin: 15px;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.PriceNowMedium {
+    font-size: 40px;
+}
