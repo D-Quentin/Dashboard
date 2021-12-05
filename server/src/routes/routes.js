@@ -166,16 +166,14 @@ function getPrevision(json) {
 }
 
 router.get('/weather', async function(req, res) {
-  var response;
-  try {
-    response = await api.axios_request(
-      "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
-      "get",
-      {"Content-Type": "application/json"},
-      8000
-    );
-  }
-  catch(e) {
+  const response = await api.axios_request(
+    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
+    "get",
+    {"Content-Type": "application/json"},
+    8000
+  );
+  console.log(response);
+  if (response === undefined) {
     res.send(JSON.parse(
     '{'+
       '"city": "Unknown",' +
@@ -198,16 +196,14 @@ router.get('/weather', async function(req, res) {
 });
 
 router.get('/crypto', async function(req, res) {
-  var fail = false;
-  var response;
-  try {
-    response = await api.axios_request(
-      "https://api.coingecko.com/api/v3/coins/"+req.query.crypto,
-      "get",
-      {"Content-Type": "application/json"},
-      8000
-    );
-  } catch (e) {
+  const response = await api.axios_request(
+    "https://api.coingecko.com/api/v3/coins/"+req.query.crypto,
+    "get",
+    {"Content-Type": "application/json"},
+    8000
+  );
+  console.log(response);
+  if (response === undefined) {
     res.send({price: 0,
       image: "/FailedToLoad.png",
       logo: "/FailedToLoad.png",
@@ -224,18 +220,16 @@ router.get('/crypto', async function(req, res) {
 
 // Covid API
 router.get('/covid', async function(req, res) {
-  try {
-    var response = await api.axios_request(
-      "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
-      "get",
-      {
-        "x-rapidapi-host": "covid-193.p.rapidapi.com",
-        "x-rapidapi-key": COVID_API_KEY
-      },
-      8000
-    );
-  }
-  catch (e) {
+  const response = await api.axios_request(
+    "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
+    "get",
+    {
+      "x-rapidapi-host": "covid-193.p.rapidapi.com",
+      "x-rapidapi-key": COVID_API_KEY
+    },
+    8000
+  );
+  if (response === undefined || response.results === 0) {
     res.send(JSON.parse(
       '{' +
         '"country": "Unknown",' +

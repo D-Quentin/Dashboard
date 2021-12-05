@@ -10,5 +10,6 @@ module.exports =
       timeout: timeout,
     })
     .then(res => res.data)
+    .catch(err => err.status)
   },
 };
