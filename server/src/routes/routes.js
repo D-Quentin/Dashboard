@@ -172,7 +172,6 @@ router.get('/weather', async function(req, res) {
     {"Content-Type": "application/json"},
     8000
   );
-  console.log(response);
   if (response === undefined) {
     res.send(JSON.parse(
     '{'+
@@ -202,7 +201,6 @@ router.get('/crypto', async function(req, res) {
     {"Content-Type": "application/json"},
     8000
   );
-  console.log(response);
   if (response === undefined) {
     res.send({price: 0,
       image: "/FailedToLoad.png",

@@ -32,7 +32,7 @@ async function DeleteWidget(id) {
   var pos = 0;
   for (var i = 0; allData[i] != undefined; i += 1) {
     if (allData[i].order === id)
-      allData.splice(pos, 1);
+      allData = allData.splice(pos, 1);
     pos += 1;
   }
   const option = {
