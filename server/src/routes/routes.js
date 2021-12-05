@@ -262,18 +262,57 @@ router.get('/covid', async function(req, res) {
 });
 
 // About
+function getHost(req) {
+  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+}
+
+function getSecondSinceEpoch() {
+  return (new Date().getTime());
+}
+
 router.get("/about.json", async function(req, res) {
   const tmp_str = 
   '{'+
-    '"client": {"host": "'+getHost()+'"},'+
+    '"client": {"host": "'+getHost(req)+'"},'+
     '"server": {'+
-      '"current_time": '+getCurrentTime()+','+
+      '"current_time": '+getSecondSinceEpoch()+','+
       '"services": [{'+
         '"name": "weather",' +
-        
-      ']}'
-    '}'+
-  '}';
+        '"size": ["small", "medium"],'+
+        '"widgets": [{'+
+          '"name": "city_temperature",'+
+          '"description": "Display the current temperature for a given city",'+
+          '"params": [{'+
+            '"name": "city",'+
+            '"type": "string"'+
+          '}]'+
+        '}, {'+
+        '"name": "crypto",' +
+        '"widgets": [{'+
+          '"name": "crypto_prices",'+
+          '"size": ["small", "medium"],'+
+          '"description": "Display the current price and evolution of crypto",'+
+          '"params": [{'+
+            '"name": "crypto",'+
+            '"type": "string"'+
+          '}]'+
+        '}]'+
+        '}, {'+
+        '"name": "covid",' +
+        '"widgets": [{'+
+          '"name": "covid_cases",'+
+          '"size": ["small", "medium"],'+
+          '"description": "Display the current covid situation for a given country",'+
+          '"params": [{'+
+            '"name": "city",'+
+            '"type": "string"'+
+          '}]'+
+        '}]'+
+      '}]'+
+    '}]'+
+  '}}';
+  json = JSON.parse(tmp_str);
+  res.send(json);
 });
 
 errorRoutes(router);
