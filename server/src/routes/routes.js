@@ -132,6 +132,39 @@ router.get("/get/widgets", async function(req, res) {
 //   res.send(response);
 // });
 
+function getDayFromDate(date) {
+  const new_date = new Date(date);
+  const day = new_date.getDay();
+
+  console.log(day);
+  switch (day) {
+    case (0):
+      return "Sun";
+    case (1):
+      return "Mon";
+    case (2):
+      return "Tue";
+    case (3):
+      return "Wed";
+    case (4):
+      return "Thu";
+    case (5):
+      return "Fri";
+    case (6):
+      return "Sat";
+  }
+}
+
+function getPrevision(json) {
+  response = "["; 
+  for (var i = 0; json.forecast.forecastday[i] != undefined; i += 1) {
+    response += '{"day": "'+getDayFromDate(json.forecast.forecastday[i].date)+'", "min": '+json.forecast.forecastday[i].day.mintemp_c+', "max": '+json.forecast.forecastday[i].day.maxtemp_c+'},';
+  }
+  response = response.slice(0, -1);
+  response += "]";
+  return (response);
+}
+
 router.get('/weather', async function(req, res) {
   const response = await api.axios_request(
     "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
@@ -139,7 +172,14 @@ router.get('/weather', async function(req, res) {
     {"Content-Type": "application/json"},
     8000
   );
-  res.send(response);
+  const tmp_str = 
+  '{'+
+    '"city": "' + response.location.name + '",' +
+    '"tempNow": "' + response.current.temp_c + '",'+
+    '"prevision": ' + getPrevision(response) +
+  '}';
+  json = JSON.parse(tmp_str);
+  res.send(json);
 });
 
 errorRoutes(router);

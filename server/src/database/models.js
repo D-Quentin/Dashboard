@@ -28,7 +28,7 @@ const User = sequelize.define("user", {
     allowNull: false,
   },
   widgets: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(65000),
   }
 });
 User.sync();
