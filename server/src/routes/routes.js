@@ -260,6 +260,17 @@ router.get("/about.json", async function(req, res) {
             '"type": "string"'+
           '}]'+
         '}, {'+
+        '"name": "crypto",' +
+        '"widgets": [{'+
+          '"name": "crypto_prices",'+
+          '"size": ["small", "medium"],'+
+          '"description": "Display the current price and evolution of crypto",'+
+          '"params": [{'+
+            '"name": "crypto",'+
+            '"type": "string"'+
+          '}]'+
+        '}]'+
+        '}, {'+
         '"name": "covid",' +
         '"widgets": [{'+
           '"name": "covid_cases",'+
@@ -271,12 +282,10 @@ router.get("/about.json", async function(req, res) {
           '}]'+
         '}]'+
       '}]'+
-    '}'+
-  '}';
-  console.log(tmp_str);
+    '}]'+
+  '}}';
   json = JSON.parse(tmp_str);
-  console.log(json);
-  res.send(tmp_str);
+  res.send(json);
 });
 
 errorRoutes(router);
