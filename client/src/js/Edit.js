@@ -2,16 +2,48 @@ import '../css/Widgets.css';
 import '../css/Edit.css';
 import Weather from './widgets/Weather';
 import Crypto from './widgets/Crypto';
+import Covid from './widgets/Covid';
 
 const GestCookie = require('./Cookie.js');
 const SERVER = "http://127.0.0.1:8080";
 
 async function SaveWidget(id) {
+  const allData = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
+  const param = document.getElementById("widget" + id).value;
 
+  for (var i = 0; allData[i] != undefined; i += 1)
+    if (allData[i].order === id)
+      allData[i].param = param;
+
+  const option = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({data: allData})
+  };
+  await fetch(SERVER + "/set/widgets?uuid=" + GestCookie.readCookie("uuid"), option);
+  document.location.href = "/Edit";
 }
 
 async function DeleteWidget(id) {
-  
+  const allData = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
+
+  var pos = 0;
+  for (var i = 0; allData[i] != undefined; i += 1) {
+    if (allData[i].order === id)
+      allData.splice(pos, 1);
+    pos += 1;
+  }
+  const option = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({data: allData})
+  };
+  await fetch(SERVER + "/set/widgets?uuid=" + GestCookie.readCookie("uuid"), option);
+  document.location.href = "/Edit";
 }
 
 async function EditWidget(widget) {
@@ -20,6 +52,8 @@ async function EditWidget(widget) {
     dataWidget = await Weather(widget.size, widget.param);
   } else if (widget.type == "CryptoWidget") {
     dataWidget = await Crypto(widget.size, widget.param);
+  } else if (widget.type == "CovidWidget") {
+    dataWidget = await Covid(widget.size, widget.param);
   } else {
     dataWidget = "EmptyWidget";
   }
@@ -28,27 +62,14 @@ async function EditWidget(widget) {
       <div className={widget.size + " " + widget.type}>
         {dataWidget}
       </div>
-      <input id={"widget" + widget.order} type="text" className="EditParamInput" value={widget.param}/>
+      <input id={"widget" + widget.order} type="text" className="EditParamInput" placeholder="Parameter"/>
       <div className="SaveDeleteDiv">
-        <button type="button" className="SaveEditButton" onClick={SaveWidget(widget.order)}>Save</button>
-        <button type="button" className="DeleteEditButton" onClick={DeleteWidget(widget.order)}>Delete</button>
+        <button type="button" className="SaveEditButton" onClick={async () => await SaveWidget(widget.order)}>Save</button>
+        <button type="button" className="DeleteEditButton" onClick={async () => await DeleteWidget(widget.order)}>Delete</button>
       </div>
     </div>
   )
 }
-
-// async function getAllWidget() {
-//   // const allWidget = await (await fetch(SERVER + "/getallwidget?uuid=" + GestCookie.readCookie("uuid"))).json();
-//   const data = [
-//     {order: "1", type: "WeatherWidget", size: "Small", param: "Paris"},
-//     {order: "2", type: "EmptyWidget", size: "Medium", param: ""},
-//     {order: "3", type: "EmptyWidget", size: "Medium", param: ""},
-//     {order: "4", type: "WeatherWidget", size: "Medium", param: "Marseille"},
-//     {order: "5", type: "EmptyWidget", size: "Small", param: ""}
-//   ];
-
-//   return (data);
-// }
 
 async function EditWidgets() {
   if (GestCookie.readCookie("uuid") == null) {

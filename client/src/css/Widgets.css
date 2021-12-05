@@ -39,3 +39,7 @@
     background-image: linear-gradient(rgb(99 99 99 / 25%), rgb(0 0 0 / 80%));
 }
 
+.CovidWidget {
+    background-color: rgb(255, 24, 24);
+    background-image: linear-gradient(rgb(230, 45, 45), rgb(163, 0, 0));
+}

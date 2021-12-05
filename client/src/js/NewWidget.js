@@ -4,8 +4,7 @@ const GestCookie = require('./Cookie.js');
 const SERVER = "http://127.0.0.1:8080";
 
 async function getListWidget() {
-  // const data = await fetch(SERVER + "/api/getallwidget"); TO DO
-  const data = ["Weather", "Empty", "Crypto"];
+  const data = ["Weather", "Empty", "Crypto", "Covid"];
 
   return (data);
 }

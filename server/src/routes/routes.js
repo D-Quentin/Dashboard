@@ -166,19 +166,34 @@ function getPrevision(json) {
 }
 
 router.get('/weather', async function(req, res) {
-  const response = await api.axios_request(
-    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
-    "get",
-    {"Content-Type": "application/json"},
-    8000
-  );
-  const tmp_str = 
+  var response;
+  try {
+    response = await api.axios_request(
+      "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
+      "get",
+      {"Content-Type": "application/json"},
+      8000
+    );
+  }
+  catch(e) {
+    res.send(JSON.parse(
+    '{'+
+      '"city": "Unknown",' +
+      '"tempNow": "0",'+
+      '"prevision": ['+
+        '{"day": "None", "min": 0, "max": 0},'+
+        '{"day": "None", "min": 0, "max": 0},'+
+        '{"day": "None", "min": 0, "max": 0}'+
+      ']'+
+    '}'));
+    return;
+  }
+  const json = JSON.parse(
   '{'+
     '"city": "' + response.location.name + '",' +
     '"tempNow": "' + response.current.temp_c + '",'+
     '"prevision": ' + getPrevision(response) +
-  '}';
-  json = JSON.parse(tmp_str);
+  '}');
   res.send(json);
 });
 
@@ -193,45 +208,57 @@ router.get('/crypto', async function(req, res) {
       8000
     );
   } catch (e) {
-    fail = true;
-  }
-  if (fail) {
     res.send({price: 0,
       image: "/FailedToLoad.png",
-      logo: "/FailedToLoad.png"
+      logo: "/FailedToLoad.png",
     });
-  } else {
-    const id = response.image.thumb.split("/")[5];
-    res.send({price: response.market_data.current_price.usd,
-              image: "https://www.coingecko.com/coins/"+ id + "/sparkline",
-              logo: response.image.large
-            });
+    return;
   }
+  const id = response.image.thumb.split("/")[5];
+  res.send({
+    price: response.market_data.current_price.usd,
+    image: "https://www.coingecko.com/coins/"+ id + "/sparkline",
+    logo: response.image.large
+  });
 });
 
 // Covid API
 router.get('/covid', async function(req, res) {
-  const response = await api.axios_request(
-    "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
-    "get",
-    {
-      "x-rapidapi-host": "covid-193.p.rapidapi.com",
-      "x-rapidapi-key": COVID_API_KEY
-    },
-    8000
-  );
-  const tmp_str = 
+  try {
+    var response = await api.axios_request(
+      "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
+      "get",
+      {
+        "x-rapidapi-host": "covid-193.p.rapidapi.com",
+        "x-rapidapi-key": COVID_API_KEY
+      },
+      8000
+    );
+  }
+  catch (e) {
+    res.send(JSON.parse(
+      '{' +
+        '"country": "Unknown",' +
+        '"population": "0",' +
+        '"active_cases": "0",' +
+        '"total_cases": "0",' +
+        '"total_deaths": "0",' +
+        '"recovered_cases": "0"' +
+      '}'
+    ));
+    return;
+  }
+  json = JSON.parse(
   '{'+
-    '"country": "' + response.response[0].country + '",' +
-    '"population": ' + response.response[0].population + ',' +
-    '"active_cases": ' + response.response[0].cases.active + ',' +
-    '"total_cases": ' + response.response[0].cases.total + ',' +
-    '"total_deaths": ' + response.response[0].deaths.total + ',' +
-    '"recovered_cases": ' + response.response[0].cases.recovered +
-  '}';
-  console.log(tmp_str);
-  json = JSON.parse(tmp_str);
+    '"country": "' + response.response[0].country+ '",' +
+    '"population": "' + response.response[0].population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + '",' +
+    '"active_cases": "' + response.response[0].cases.active.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + '",' +
+    '"total_cases": "' + response.response[0].cases.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + '",' +
+    '"total_deaths": "' + response.response[0].deaths.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + '",' +
+    '"recovered_cases": "' + response.response[0].cases.recovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') +
+  '"}');
   res.send(json);
+  return;
 });
 
 // About
