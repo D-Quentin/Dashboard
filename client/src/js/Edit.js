@@ -1,6 +1,7 @@
 import '../css/Widgets.css';
 import '../css/Edit.css';
 import Weather from './widgets/Weather';
+import Crypto from './widgets/Crypto';
 
 const GestCookie = require('./Cookie.js');
 const SERVER = "http://127.0.0.1:8080";
@@ -15,10 +16,13 @@ async function DeleteWidget(id) {
 
 async function EditWidget(widget) {
   let dataWidget;
-  if (widget.type == "WeatherWidget")
-  dataWidget = await Weather(widget.size);
-  else
-  dataWidget = "EmptyWidget";
+  if (widget.type == "WeatherWidget") {
+    dataWidget = await Weather(widget.size, widget.param);
+  } else if (widget.type == "CryptoWidget") {
+    dataWidget = await Crypto(widget.size, widget.param);
+  } else {
+    dataWidget = "EmptyWidget";
+  }
   return (
     <div className="EditWidget">
       <div className={widget.size + " " + widget.type}>

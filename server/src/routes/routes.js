@@ -137,7 +137,6 @@ function getDayFromDate(date) {
   const new_date = new Date(date);
   const day = new_date.getDay();
 
-  console.log(day);
   switch (day) {
     case (0):
       return "Sun";
@@ -181,6 +180,33 @@ router.get('/weather', async function(req, res) {
   '}';
   json = JSON.parse(tmp_str);
   res.send(json);
+});
+
+router.get('/crypto', async function(req, res) {
+  var fail = false;
+  var response;
+  try {
+    response = await api.axios_request(
+      "https://api.coingecko.com/api/v3/coins/"+req.query.crypto,
+      "get",
+      {"Content-Type": "application/json"},
+      8000
+    );
+  } catch (e) {
+    fail = true;
+  }
+  if (fail) {
+    res.send({price: 0,
+      image: "/FailedToLoad.png",
+      logo: "/FailedToLoad.png"
+    });
+  } else {
+    const id = response.image.thumb.split("/")[5];
+    res.send({price: response.market_data.current_price.usd,
+              image: "https://www.coingecko.com/coins/"+ id + "/sparkline",
+              logo: response.image.large
+            });
+  }
 });
 
 // Covid API

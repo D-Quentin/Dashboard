@@ -25,10 +25,10 @@
 
 .WeatherList {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin-right: 40px;
     margin-left: 40px;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .WeatherListSeparator {
@@ -37,7 +37,8 @@
 }
 
 .WeatherListItem {
-    margin: 3px;
+    margin: 18px;
+    width: 100px;
 }
 
 .WeatherSmall {
