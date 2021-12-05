@@ -43,6 +43,5 @@ services:
       POSTGRES_PASSWORD: postgres
       # WeatherAPI
       WEATHER_API_KEY: 20fdd92ad15e47869a1140527210112
-      # OAuth2
-      GOOGLE_OAUTH_SECRET: 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
-      GOOGLE_OAUTH_API_KEY: 656903528628-sn7o1btc0ac4jo87jt5nvm7vrhs73rp4.apps.googleusercontent.com
+      # Covid API
+      COVID_API_KEY: 81c1f1afe3msh9d134544ba0809ap11af5ajsn85de4560cada

@@ -1,6 +1,6 @@
 // Constant
 const md5 = require('md5');
-const {WEATHER_API_KEY} = process.env
+const {WEATHER_API_KEY, COVID_API_KEY} = process.env
 const {v4: uuidv4} = require('uuid');
 const errorRoutes = require("./error");
 const router = require("express").Router();
@@ -132,11 +132,11 @@ router.get("/get/widgets", async function(req, res) {
 //   res.send(response);
 // });
 
+// Weather API
 function getDayFromDate(date) {
   const new_date = new Date(date);
   const day = new_date.getDay();
 
-  console.log(day);
   switch (day) {
     case (0):
       return "Sun";
@@ -158,7 +158,7 @@ function getDayFromDate(date) {
 function getPrevision(json) {
   response = "["; 
   for (var i = 0; json.forecast.forecastday[i] != undefined; i += 1) {
-    response += '{"day": "'+getDayFromDate(json.forecast.forecastday[i].date)+'", "min": '+json.forecast.forecastday[i].day.mintemp_c+', "max": '+json.forecast.forecastday[i].day.maxtemp_c+'},';
+    response += '{"day": "'+getDayFromDate(json.forecast.forecastday[i].date)+'", "min": '+Math.floor(json.forecast.forecastday[i].day.mintemp_c)+', "max": '+Math.floor(json.forecast.forecastday[i].day.maxtemp_c)+'},';
   }
   response = response.slice(0, -1);
   response += "]";
@@ -209,6 +209,45 @@ router.get('/crypto', async function(req, res) {
   }
 });
 
+// Covid API
+router.get('/covid', async function(req, res) {
+  const response = await api.axios_request(
+    "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
+    "get",
+    {
+      "x-rapidapi-host": "covid-193.p.rapidapi.com",
+      "x-rapidapi-key": COVID_API_KEY
+    },
+    8000
+  );
+  const tmp_str = 
+  '{'+
+    '"country": "' + response.response[0].country + '",' +
+    '"population": ' + response.response[0].population + ',' +
+    '"active_cases": ' + response.response[0].cases.active + ',' +
+    '"total_cases": ' + response.response[0].cases.total + ',' +
+    '"total_deaths": ' + response.response[0].deaths.total + ',' +
+    '"recovered_cases": ' + response.response[0].cases.recovered +
+  '}';
+  console.log(tmp_str);
+  json = JSON.parse(tmp_str);
+  res.send(json);
+});
+
+// About
+router.get("/about.json", async function(req, res) {
+  const tmp_str = 
+  '{'+
+    '"client": {"host": "'+getHost()+'"},'+
+    '"server": {'+
+      '"current_time": '+getCurrentTime()+','+
+      '"services": [{'+
+        '"name": "weather",' +
+        
+      ']}'
+    '}'+
+  '}';
+});
 
 errorRoutes(router);
 

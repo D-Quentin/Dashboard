@@ -2,35 +2,15 @@ import '../../css/widgets/Weather.css';
 
 const SERVER = "http://127.0.0.1:8080";
 
-async function getWeatherData() {
-  // const data = await fetch(SERVER + "/api/widgetsdata/weather"); TO DO
-  const data = {city: "Paris", tempNow: "12", prevision:
-  [
-    {day: "Sun", min: "4", max: "11"},
-    {day: "Mon", min: "3", max: "9"},
-    {day: "Tue", min: "3", max: "7"},
-    {day: "Wed", min: "2", max: "9"},
-    {day: "Thu", min: "4", max: "11"},
-    {day: "Fri", min: "5", max: "11"},
-    {day: "Sat", min: "3", max: "9"}
-  ]};
-  return (data);
-}
-
 function WeatherMedium(data) {
-  let weatherList1;
-  let weatherList2;
+  let weatherList
 
   for (let i = 0; i != 3; i++) {
-    weatherList1 = <>{weatherList1}
+    weatherList = <>{weatherList}
     <div className="WeatherListItem">
-      {data.prevision[i].day + "   " + data.prevision[i].min + "° - " + data.prevision[i].max + "°"}
-    </div></>;
-  }
-  for (let i = 3; i != 7; i++) {
-    weatherList2 = <>{weatherList2}
-    <div className="WeatherListItem">
-      {data.prevision[i].day + "   " + data.prevision[i].min + "° - " + data.prevision[i].max + "°"}
+      {data.prevision[i].day}
+      <br/>
+      {data.prevision[i].min + "° - " + data.prevision[i].max + "°"}
     </div></>;
   }
 
@@ -42,11 +22,7 @@ function WeatherMedium(data) {
       </div>
       <div className="WeatherPrevision">
         <div className="WeatherList">
-          {weatherList1}
-        </div>
-        <div className="WeatherListSeparator"/>
-        <div className="WeatherList">
-          {weatherList2}
+          {weatherList}
         </div>
       </div>
     </>
@@ -63,7 +39,7 @@ function WeatherSmall(data) {
 }
 
 async function Weather(widgetSize, param) {
-  const data = await getWeatherData();
+  const data = await (await fetch(SERVER + "/weather?city=" + param + "&days=3")).json();
 
   if (widgetSize == "SmallWidget")
     return (WeatherSmall(data));
