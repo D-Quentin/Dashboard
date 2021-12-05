@@ -21,7 +21,7 @@ async function EditWidget(widget) {
   dataWidget = "EmptyWidget";
   return (
     <div className="EditWidget">
-      <div className={"Widget" + widget.size + " " + widget.type}>
+      <div className={widget.size + " " + widget.type}>
         {dataWidget}
       </div>
       <input id={"widget" + widget.order} type="text" className="EditParamInput" value={widget.param}/>
@@ -50,17 +50,16 @@ async function EditWidgets() {
   if (GestCookie.readCookie("uuid") == null) {
     return;
   }
-  return;
-  const widgetType = await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json();
+  const widgetType = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
   let widgetContent;
   for (let i = 0; i != widgetType.length; i++) {
-    widgetContent = <>{widgetContent}{await Widget(widgetType[i])}</>;
+    widgetContent = <>{widgetContent}{await EditWidget(widgetType[i])}</>;
   }
   return (
     <div className="AllWidgets">
       {widgetContent}
       <a href="/newWidget">
-        <div className="WidgetSmall NewWidget">
+        <div className="SmallWidget NewWidget">
           <div className="NewWidgetPlus">+</div>
           <div className="NewWidgetText">New Widget</div>
         </div>

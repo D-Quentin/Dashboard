@@ -43,7 +43,7 @@ module.exports =
   },
 
   addUser: async function (username, password, uuid) {
-    await (User.build({username: username, password: password, uuid: uuid, widgets: "{data: []}"})).save();
+    await (User.build({username: username, password: password, uuid: uuid, widgets: '{"data": []}'})).save();
   },
 
   getUuidFromUsernameAndPassword: async function (username, password) {

@@ -11,7 +11,7 @@ async function Widget(widgetType, widgetSize) {
   else
     widget = "EmptyWidget";
   return (
-    <div className={"Widget" + widgetSize + " " + widgetType}>
+    <div className={widgetSize + " " + widgetType}>
       {widget}
     </div>
   )
@@ -22,14 +22,13 @@ async function getAllWidget() {
   if (GestCookie.readCookie("uuid") != null) {
     var res = await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"));
     data = await res.json();
-    console.log(res.data);
   } else {
     data = {data: [
-      {order: "1", type: "WeatherWidget", size: "Small", param: "Paris"},
-      {order: "2", type: "EmptyWidget", size: "Medium", param: ""},
-      {order: "3", type: "EmptyWidget", size: "Medium", param: ""},
-      {order: "4", type: "WeatherWidget", size: "Medium", param: "Marseille"},
-      {order: "5", type: "EmptyWidget", size: "Small", param: ""}
+      {order: "1", type: "WeatherWidget", size: "SmallWidget", param: "Paris"},
+      {order: "2", type: "EmptyWidget", size: "MediumWidget", param: ""},
+      {order: "3", type: "EmptyWidget", size: "MediumWidget", param: ""},
+      {order: "4", type: "WeatherWidget", size: "MediumWidget", param: "Marseille"},
+      {order: "5", type: "EmptyWidget", size: "SmallWidget", param: ""}
     ]};
   }
   return (data);
@@ -37,8 +36,6 @@ async function getAllWidget() {
 
 async function Widgets() {
   const widgetType = (await getAllWidget()).data;
-  console.log("TEST");
-  console.log(widgetType);
   let widgetContent;
   for (let i = 0; i != widgetType.length; i++) {
     widgetContent = <>{widgetContent}{await Widget(widgetType[i].type, widgetType[i].size)}</>;

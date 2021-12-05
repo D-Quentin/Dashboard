@@ -64,7 +64,7 @@ async function WeatherSmall() {
 }
 
 async function Weather(widgetSize) {
-  if (widgetSize == "Small")
+  if (widgetSize == "SmallWidget")
     return (await WeatherSmall());
   else
     return (await WeatherMedium());

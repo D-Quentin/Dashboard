@@ -105,7 +105,7 @@ router.post("/oauth/register", async function (req, res) {
 
 // Widget management
 router.post("/set/widgets", async function(req, res) {
-  const response = await orm.setWidgets(req.query.uuid, req.body.widgets);
+  const response = await orm.setWidgets(req.query.uuid, JSON.stringify(req.body));
   res.send(JSON.parse('{"success": true}'));
   return;
 });
@@ -122,19 +122,19 @@ router.get("/get/widgets", async function(req, res) {
 //
 
 // Weather Widget
-router.get('/weather/:city', async function(req, res) {
-  const response = await api.axios_request(
-    "https://api.weatherapi.com/v1/current.json?key="+WEATHER_API_KEY+"&q="+req.params.city,
-    "get",
-    {"Content-Type": "application/json"},
-    8000
-  )
-  res.send(response);
-});
+// router.get('/weather', async function(req, res) {
+//   const response = await api.axios_request(
+//     "https://api.weatherapi.com/v1/current.json?key="+WEATHER_API_KEY+"&q="+req.query.city,
+//     "get",
+//     {"Content-Type": "application/json"},
+//     8000
+//   )
+//   res.send(response);
+// });
 
-router.get('/weather/:city/:days', async function(req, res) {
+router.get('/weather', async function(req, res) {
   const response = await api.axios_request(
-    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.params.city+"&days="+req.params.days,
+    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
     "get",
     {"Content-Type": "application/json"},
     8000

@@ -13,7 +13,7 @@ async function TryRegister() {
   if (data.success) {
     GestCookie.createCookie("uuid", data.uuid, 365);
     GestCookie.createCookie("username", pseudo, 365);
-    document.location.href = "/";
+    document.location.href = "/edit";
     return;
   }
   document.getElementById("ConnectionError").style.display = "block";
@@ -33,7 +33,7 @@ async function RegisterSuccessGoogle(googleData) {
   if (data.success) {
     GestCookie.createCookie("uuid", data.uuid, 365);
     GestCookie.createCookie("username", data.username, 365);
-    document.location.href = "/";
+    document.location.href = "/edit";
     return;
   }
   document.getElementById("ConnectionError").style.display = "block";

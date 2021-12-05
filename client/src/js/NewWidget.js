@@ -16,16 +16,20 @@ async function CreateWidget() {
   tmp = document.getElementById('SelectSizeId');
   const size = tmp.options[tmp.selectedIndex].value + "Widget";
   const param = document.getElementById("ParameterId").value;
-  const allWidget = await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json();
+  const allWidget = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
 
-  allWidget.push({order: allWidget[allWidget.length - 1].order, type, size, param});
+  if (allWidget.length != 0) {
+    allWidget.push({order: allWidget[allWidget.length - 1].order, type, size, param});
+  } else {
+    allWidget.push({order: 1, type, size, param});
+  }
 
   const option = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(allWidget)
+    body: JSON.stringify({data: allWidget})
   };
   await fetch(SERVER + "/set/widgets?uuid=" + GestCookie.readCookie("uuid"), option);
   document.location.href = "/edit#End";
@@ -36,7 +40,6 @@ async function NewWidget() {
   if (GestCookie.readCookie("uuid") == null) {
     return;
   }
-  return;
   var allOptions;
   const allWidgets = await getListWidget();
 
