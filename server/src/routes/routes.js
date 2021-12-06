@@ -166,58 +166,60 @@ function getPrevision(json) {
 }
 
 router.get('/weather', async function(req, res) {
-  const response = await api.axios_request(
-    "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
-    "get",
-    {"Content-Type": "application/json"},
-    8000
-  );
-  if (response === undefined) {
-    res.send(JSON.parse(
+  try {
+    const response = await api.axios_request(
+      "https://api.weatherapi.com/v1/forecast.json?key="+WEATHER_API_KEY+"&q="+req.query.city+"&days="+req.query.days,
+      "get",
+      {"Content-Type": "application/json"},
+      8000
+    );
+    const json = JSON.parse(
     '{'+
-      '"city": "Unknown",' +
-      '"tempNow": "0",'+
-      '"prevision": ['+
-        '{"day": "None", "min": 0, "max": 0},'+
-        '{"day": "None", "min": 0, "max": 0},'+
-        '{"day": "None", "min": 0, "max": 0}'+
-      ']'+
-    '}'));
+      '"city": "' + response.location.name + '",' +
+      '"tempNow": "' + response.current.temp_c + '",'+
+      '"prevision": ' + getPrevision(response) +
+    '}');
+    res.send(json);
+  } catch (e) {
+    res.send(JSON.parse(
+      '{'+
+        '"city": "Unknown",' +
+        '"tempNow": "0",'+
+        '"prevision": ['+
+          '{"day": "None", "min": 0, "max": 0},'+
+          '{"day": "None", "min": 0, "max": 0},'+
+          '{"day": "None", "min": 0, "max": 0}'+
+        ']'+
+      '}'));
     return;
   }
-  const json = JSON.parse(
-  '{'+
-    '"city": "' + response.location.name + '",' +
-    '"tempNow": "' + response.current.temp_c + '",'+
-    '"prevision": ' + getPrevision(response) +
-  '}');
-  res.send(json);
 });
 
 router.get('/crypto', async function(req, res) {
-  const response = await api.axios_request(
-    "https://api.coingecko.com/api/v3/coins/"+req.query.crypto,
-    "get",
-    {"Content-Type": "application/json"},
-    8000
-  );
-  if (response === undefined) {
+  try {
+    const response = await api.axios_request(
+      "https://api.coingecko.com/api/v3/coins/"+req.query.crypto,
+      "get",
+      {"Content-Type": "application/json"},
+      8000
+    );
+    const id = response.image.thumb.split("/")[5];
+    res.send({
+      price: response.market_data.current_price.usd,
+      image: "https://www.coingecko.com/coins/"+ id + "/sparkline",
+      logo: response.image.large
+    });
+  } catch (e) {
     res.send({price: 0,
       image: "/FailedToLoad.png",
       logo: "/FailedToLoad.png",
     });
-    return;
   }
-  const id = response.image.thumb.split("/")[5];
-  res.send({
-    price: response.market_data.current_price.usd,
-    image: "https://www.coingecko.com/coins/"+ id + "/sparkline",
-    logo: response.image.large
-  });
 });
 
 // Covid API
 router.get('/covid', async function(req, res) {
+  try {
   const response = await api.axios_request(
     "https://covid-193.p.rapidapi.com/statistics?country=" + req.query.country,
     "get",
@@ -227,19 +229,6 @@ router.get('/covid', async function(req, res) {
     },
     8000
   );
-  if (response === undefined || response.results === 0) {
-    res.send(JSON.parse(
-      '{' +
-        '"country": "Unknown",' +
-        '"population": "0",' +
-        '"active_cases": "0",' +
-        '"total_cases": "0",' +
-        '"total_deaths": "0",' +
-        '"recovered_cases": "0"' +
-      '}'
-    ));
-    return;
-  }
   json = JSON.parse(
   '{'+
     '"country": "' + response.response[0].country+ '",' +
@@ -251,6 +240,18 @@ router.get('/covid', async function(req, res) {
   '"}');
   res.send(json);
   return;
+  } catch (e) {
+    res.send(JSON.parse(
+      '{' +
+        '"country": "Unknown",' +
+        '"population": "0",' +
+        '"active_cases": "0",' +
+        '"total_cases": "0",' +
+        '"total_deaths": "0",' +
+        '"recovered_cases": "0"' +
+      '}'
+    ));
+  }
 });
 
 // About

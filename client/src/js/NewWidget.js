@@ -18,7 +18,7 @@ async function CreateWidget() {
   const allWidget = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
 
   if (allWidget.length != 0) {
-    allWidget.push({order: allWidget[allWidget.length - 1].order, type, size, param});
+    allWidget.push({order: allWidget[allWidget.length - 1].order + 1, type, size, param});
   } else {
     allWidget.push({order: 1, type, size, param});
   }

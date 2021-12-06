@@ -27,20 +27,20 @@ async function SaveWidget(id) {
 }
 
 async function DeleteWidget(id) {
+  var changed = [];
   var allData = (await (await fetch(SERVER + "/get/widgets?uuid=" + GestCookie.readCookie("uuid"))).json()).data;
 
-  var pos = 0;
   for (var i = 0; allData[i] != undefined; i += 1) {
-    if (allData[i].order === id)
-      allData = allData.splice(pos, 1);
-    pos += 1;
+    if (allData[i].order != id)
+      changed.push(allData[i]);
   }
+
   const option = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({data: allData})
+    body: JSON.stringify({data: changed})
   };
   await fetch(SERVER + "/set/widgets?uuid=" + GestCookie.readCookie("uuid"), option);
   document.location.href = "/Edit";
