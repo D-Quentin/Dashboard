@@ -1,5 +1,1 @@
-sudo docker-compose build
-sudo docker-compose up
-
-sudo systemctl start docker
-sudo netstat -plten |grep java
+Read the B-DEV-500_dashboard.pdf file to understand how the project works.
